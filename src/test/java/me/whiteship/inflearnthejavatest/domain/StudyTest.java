@@ -8,6 +8,7 @@ import java.time.Duration;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -52,6 +53,7 @@ class StudyTest {
     int value = 1;
 
     @FastTest
+    @Disabled
     void create_new_study() {
         Study study = new Study(value++);
         // assertAll을 사용하면 깨지는 테스트를 한 번에 찾을 수 있다
