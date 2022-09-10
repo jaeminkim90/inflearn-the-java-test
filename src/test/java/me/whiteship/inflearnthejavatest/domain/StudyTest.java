@@ -6,10 +6,13 @@ import static org.junit.jupiter.api.Assumptions.*;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
@@ -26,13 +29,26 @@ import org.junit.jupiter.params.provider.ValueSource;
 import me.whiteship.inflearnthejavatest.FastTest;
 import me.whiteship.inflearnthejavatest.SlowTest;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) // 클래스 단위로 인스턴스를 생성한다.(= 클래스 내에서 하나의 인스턴스를 공유함)
 class StudyTest {
+
+    // @BeforeAll이나 AfterAll을 정의할 때는 반드시 static을 사용해야 한다
+    // 하지만 클래스 단위로 인스턴스를 생성하면 static일 필요가 없다
+    @BeforeAll
+    void beforeAll() {
+        System.out.println("befor All");
+    }
+
+    @AfterAll
+        void afterAll() {
+        System.out.println("after All");
+    }
 
     int value = 1;
 
     @FastTest
     void create_new_study() {
-        Study study = new Study(value ++);
+        Study study = new Study(value++);
         // assertAll을 사용하면 깨지는 테스트를 한 번에 찾을 수 있다
         assertAll(
             () -> assertNotNull(study),
