@@ -9,10 +9,13 @@ import java.time.Duration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
@@ -30,6 +33,8 @@ import me.whiteship.inflearnthejavatest.FastTest;
 import me.whiteship.inflearnthejavatest.SlowTest;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // 클래스 단위로 인스턴스를 생성한다.(= 클래스 내에서 하나의 인스턴스를 공유함)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+// 특정 순서대로 테스트를 실행하고 싶을 때s는 @TestInstance(Lifecycle.PER_CLASS)와 @TestMethodOrder를 사용한다.
 class StudyTest {
 
     // @BeforeAll이나 AfterAll을 정의할 때는 반드시 static을 사용해야 한다
@@ -60,6 +65,7 @@ class StudyTest {
     }
 
     @SlowTest
+    @Order(0) // Jnunit이 제공하는 Order를 사용해야 한다.
     void wrong_limit_test() {
         IllegalArgumentException exception =
             assertThrows(IllegalArgumentException.class, () -> new Study(-10));
