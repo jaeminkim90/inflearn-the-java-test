@@ -32,20 +32,20 @@ import org.junit.jupiter.params.provider.ValueSource;
 import me.whiteship.inflearnthejavatest.FastTest;
 import me.whiteship.inflearnthejavatest.SlowTest;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // 클래스 단위로 인스턴스를 생성한다.(= 클래스 내에서 하나의 인스턴스를 공유함)
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS) // 클래스 단위로 인스턴스를 생성한다.(= 클래스 내에서 하나의 인스턴스를 공유함)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-// 특정 순서대로 테스트를 실행하고 싶을 때s는 @TestInstance(Lifecycle.PER_CLASS)와 @TestMethodOrder를 사용한다.
+    // 특정 순서대로 테스트를 실행하고 싶을 때s는 @TestInstance(Lifecycle.PER_CLASS)와 @TestMethodOrder를 사용한다.
 class StudyTest {
 
     // @BeforeAll이나 AfterAll을 정의할 때는 반드시 static을 사용해야 한다
     // 하지만 클래스 단위로 인스턴스를 생성하면 static일 필요가 없다
     @BeforeAll
-    void beforeAll() {
+    static void beforeAll() {
         System.out.println("befor All");
     }
 
     @AfterAll
-        void afterAll() {
+    static void afterAll() {
         System.out.println("after All");
     }
 
@@ -65,7 +65,8 @@ class StudyTest {
     }
 
     @SlowTest
-    @Order(0) // Jnunit이 제공하는 Order를 사용해야 한다.
+    @Order(1)
+        // Jnunit이 제공하는 Order를 사용해야 한다.
     void wrong_limit_test() {
         IllegalArgumentException exception =
             assertThrows(IllegalArgumentException.class, () -> new Study(-10));
@@ -101,6 +102,7 @@ class StudyTest {
     }
 
     @Test
+    @Order(2)
     void value_test() {
         System.out.println("this = " + this);
         System.out.println("value ++ = " + value++);
@@ -119,30 +121,30 @@ class StudyTest {
         assumeTrue("LOCAL".equalsIgnoreCase(System.getenv("TEST_ENV")));
     }
 
-    @DisplayName("스터디 만들기")
+    @DisplayName("스터디 만들기6")
     @RepeatedTest(value = 10, name = "{displayName}, {currentRepetition}/{totalRepetitions}")
     void repeat(RepetitionInfo repetitionInfo) {
         System.out.println(
             "test " + repetitionInfo.getCurrentRepetition() + "/" + repetitionInfo.getTotalRepetitions());
     }
 
-    @DisplayName("스터디 만들기")
+    @DisplayName("스터디 만들기5")
     @ParameterizedTest(name = "{index} {displayName}  message = {0}") // 몇 번째 파라미터를 사용할 지 지정할 수 있다
     @ValueSource(strings = {"날씨가", "많이", "추워지고", "있네요."})
     @NullAndEmptySource
     void parameterizedTest(String message) {
         System.out.println(message);
-
     }
 
-    @DisplayName("스터디 만들기")
+    @DisplayName("스터디 만들기4")
     @ParameterizedTest(name = "{index} {displayName}  message = {0}") // 몇 번째 파라미터를 사용할 지 지정할 수 있
     @ValueSource(ints = {10, 20, 30})
+    @Order(3)
     void convert_Test(@ConvertWith(StudyConverter.class) Study study) {
         System.out.println(study.getLimitCount());
     }
 
-    @DisplayName("스터디 만들기")
+    @DisplayName("스터디 만들기3")
     @ParameterizedTest(name = "{index} {displayName}  message = {0}") // 몇 번째 파라미터를 사용할 지 지정할 수 있
     @CsvSource({"10, '자바 스터디'", "20, '스프링 스터디'"})
     void csv_Test(Integer limit, String name) {
@@ -150,7 +152,7 @@ class StudyTest {
         System.out.println(study);
     }
 
-    @DisplayName("스터디 만들기")
+    @DisplayName("스터디 만들기2")
     @ParameterizedTest(name = "{index} {displayName}  message = {0}") // 몇 번째 파라미터를 사용할 지 지정할 수 있
     @CsvSource({"10, '자바 스터디'", "20, '스프링 스터디'"})
     void argumentAccessor_Test(ArgumentsAccessor argumentsAccessor) {
@@ -159,7 +161,7 @@ class StudyTest {
         System.out.println(study);
     }
 
-    @DisplayName("스터디 만들기")
+    @DisplayName("스터디 만들기1")
     @ParameterizedTest(name = "{index} {displayName}  message = {0}") // 몇 번째 파라미터를 사용할 지 지정할 수 있
     @CsvSource({"10, '자바 스터디'", "20, '스프링 스터디'"})
     void studyAggregator_Test(@AggregateWith(StudyAggregator.class) Study study) {
